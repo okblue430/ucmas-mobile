@@ -11,6 +11,17 @@ const ApplicationStyles = {
       flex: 1,
       backgroundColor: Colors.transparent
     },
+    flex_row: {
+      display: 'flex',
+      flexDirection: 'row'
+    },
+    headerContainer: {
+      zIndex: 1
+    },
+    whiteContainer: {
+      flex: 1,
+      backgroundColor: '#fff'//Colors.transparent
+    },
     backgroundImage: {
       position: 'absolute',
       top: 0,
@@ -44,7 +55,21 @@ const ApplicationStyles = {
       ...Fonts.style.h2,
       fontSize: 14,
       color: Colors.text
-    }
+    },
+    default_button: {
+      height: 45,
+      marginVertical: 20,
+      paddingVertical: 5,
+    },
+    default_txt_input: {
+      color: Colors.text_color,
+      borderColor: '#ddd',
+      borderWidth: 1,
+      borderRadius: 5,
+      fontSize: 16,
+      paddingHorizontal: 10,
+      paddingVertical: 7,
+    },
   },
   darkLabelContainer: {
     padding: Metrics.smallMargin,

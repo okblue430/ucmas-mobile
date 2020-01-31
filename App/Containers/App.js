@@ -1,6 +1,7 @@
 import '../Config'
 import DebugConfig from '../Config/DebugConfig'
 import React, { Component } from 'react'
+import { DefaultTheme, Provider as PaperProvider, Colors } from 'react-native-paper';
 import { Provider } from 'react-redux'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
@@ -17,11 +18,24 @@ const store = createStore()
  *
  * We separate like this to play nice with React Native's hot reloading.
  */
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#1565C0',
+    accent: '#1565C0',
+    text: Colors.grey800
+  },
+};
+
 class App extends Component {
   render () {
     return (
       <Provider store={store}>
-        <RootContainer />
+        <PaperProvider theme={theme}>
+          <RootContainer />
+        </PaperProvider>
       </Provider>
     )
   }
