@@ -56,12 +56,28 @@ import { Metrics } from '../Themes'
 //     headerStyle: styles.header
 //   }
 // })
+const LessonStack = createStackNavigator({
+  PageLesson: { screen: LessonsScreen },
+  PageLessonDetail: { screen: LessonDetailScreen },
+  PagePlanDetail: { screen: PlanDetailScreen }
+}, {
+  headerMode: 'none',
+  initialRouteName: 'PageLesson',
+  defaultNavigationOptions: {
+    headerStyle: styles.header
+  },
+  cardShadowEnabled: false,
+  transitionConfig : () => ({
+    containerStyle: {
+    }
+  })
+})
 
 const DrawerStack = createDrawerNavigator({
   PageHome: { screen: HomeScreen },
   PageAccomplish: { screen: AccomplishScreen },
   PageAssignment: { screen: AssignmentScreen },
-  PageLessons: { screen: LessonsScreen },
+  PageLessons: { screen: LessonStack },
   PageNotification: { screen: NotificationScreen },
   PageProfile: { screen: ProfileScreen },
   PageCalendar: { screen: CalendarScreen },
@@ -109,7 +125,7 @@ const PrimaryNav = createSwitchNavigator(
     App: AppStack,
     Auth: AuthStack
   }, {
-    initialRouteName: 'Auth'//'AuthLoading'
+    initialRouteName: 'AuthLoading'
   }
 )
 

@@ -8,7 +8,7 @@ export default StyleSheet.create({
   },
   row_area: {
     flex: 1,
-    marginVertical: 5
+    marginVertical: 30
   },
   btn_role: {
     flex: 1,

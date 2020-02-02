@@ -2,12 +2,14 @@ import '../Config'
 import DebugConfig from '../Config/DebugConfig'
 import React, { Component } from 'react'
 import { DefaultTheme, Provider as PaperProvider, Colors } from 'react-native-paper';
-import { Provider } from 'react-redux'
+// import { Provider } from 'react-redux'
+import { Provider as StoreProvider} from 'react-redux'
 import RootContainer from './RootContainer'
 import createStore from '../Redux'
+import { PersistGate } from 'redux-persist/integration/react'
 
 // create our store
-const store = createStore()
+const { store, persistor } = createStore()
 
 /**
  * Provides an entry point into our application.  Both index.ios.js and index.android.js
@@ -32,11 +34,13 @@ const theme = {
 class App extends Component {
   render () {
     return (
-      <Provider store={store}>
-        <PaperProvider theme={theme}>
-          <RootContainer />
-        </PaperProvider>
-      </Provider>
+      <StoreProvider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <PaperProvider theme={theme}>
+            <RootContainer />
+          </PaperProvider>
+        </PersistGate>
+      </StoreProvider>
     )
   }
 }

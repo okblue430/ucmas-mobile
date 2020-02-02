@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { ScrollView, View, Text, KeyboardAvoidingView } from 'react-native'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
+import AuthActions from '../Redux/AuthRedux'
 import CodeInput from 'react-native-confirmation-code-input';
 import AwesomeAlert from 'react-native-awesome-alerts'
 import { SafeAreaView } from 'react-navigation'
@@ -26,6 +26,7 @@ class VerifyScreen extends Component {
   }
   handleResend = () => {
     // send code again
+    this.props.resendCodeRequest();
   }
 
   handleCloseEmptyMessage = () => {
@@ -36,20 +37,36 @@ class VerifyScreen extends Component {
     this.props.initStatesForAuthentication()
   }
 
-  handleTokenError = () => {
-    this.props.initTokenError()
+  handleCloseSuccessMessage = () => {
+    this.props.initStatesForAuthentication()
   }
+
   _onFinishCheckingCode2 = (isValid, code) => {
-    console.log(isValid)
+    console.log(isValid) // code
     console.log(code)
-    if(isValid) {
-      this.props.navigation.navigate('PageRegisterSuccess')
+    if(isValid != ""){
+      const credential = {
+        verify_code: isValid,
+      }
+      this.props.verifyCodeRequest(credential);
     }else{
       this.setState({showAlert: true});
     }
+    // if(isValid) {
+    //   this.props.resendCodeRequest();
+    //   // this.props.navigation.navigate('PageRegisterSuccess')
+    // }else{
+    //   this.setState({showAlert: true});
+    // }
   }
 
   render () {
+    const {
+      fetching,
+      auth_error,
+      auth_success
+    } = this.props
+    const is_auth_error = auth_error == "" ? false : true;
     return (
       <SafeAreaView style={styles.mainContainer}>
         <View style={styles.headerContainer}>
@@ -69,13 +86,12 @@ class VerifyScreen extends Component {
                   <CodeInput
                     ref="codeInputRef2"
                     keyboardType="numeric"
-                    codeLength={5}
+                    codeLength={6}
                     className='border-box'
-                    compareWithCode='12345'
                     activeColor={Colors.primary_color}
                     inactiveColor='rgba(49, 180, 4, 1.3)'
                     autoFocus={true}
-                    space='25'
+                    space={25}
                     codeInputStyle={{ borderWidth: 1.5, fontSize: 24, borderColor: 'black', color: 'black' }}
                     onFulfill={(isValid, code) => this._onFinishCheckingCode2(isValid, code)}
                   />
@@ -98,10 +114,10 @@ class VerifyScreen extends Component {
           closeOnHardwareBackPress={false}
           showConfirmButton={true}
           confirmText="OK"
-          confirmButtonColor="#009BF2"
+          confirmButtonColor={Colors.primary_color}
           onConfirmPressed={this.handleCloseEmptyMessage}
         />
-        {/* <AwesomeAlert
+        <AwesomeAlert
           show={fetching}
           showProgress={true}
           progressSize={'large'}
@@ -109,10 +125,10 @@ class VerifyScreen extends Component {
           closeOnHardwareBackPress={false}
         />
         <AwesomeAlert
-          show={signin_error}
+          show={is_auth_error}
           showProgress={false}
           title="Error"
-          message="There was problem signing in! Try again."
+          message={auth_error}
           closeOnTouchOutside={true}
           closeOnHardwareBackPress={false}
           showCancelButton={true}
@@ -120,29 +136,36 @@ class VerifyScreen extends Component {
           onCancelPressed={this.handleError}
         />
         <AwesomeAlert
-          show={token_error != null}
+          show={auth_success}
           showProgress={false}
-          title={token_error_message}
-          message="Please sign in."
-          closeOnTouchOutside={false}
+          title="Success"
+          message="Verification code sent again."
+          closeOnTouchOutside={true}
           closeOnHardwareBackPress={false}
           showConfirmButton={true}
           confirmText="OK"
-          confirmButtonColor="#DD6B55"
-          onConfirmPressed={this.handleTokenError}
-        /> */}
+          confirmButtonColor={Colors.primary_color}
+          onConfirmPressed={this.handleCloseSuccessMessage}
+        />
       </SafeAreaView>
     )
   }
 }
 
 const mapStateToProps = (state) => {
+  const { auth } = state
   return {
+    fetching: auth.auth_fetching,
+    auth_error: auth.auth_error,
+    auth_success: auth.auth_success,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    resendCodeRequest: () => dispatch(AuthActions.resendCodeRequest()),
+    verifyCodeRequest: (credential) => dispatch(AuthActions.verifyCodeRequest(credential)),
+    initStatesForAuthentication: () => dispatch(AuthActions.initStatesForAuthentication()),
   }
 }
 

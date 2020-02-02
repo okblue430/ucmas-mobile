@@ -1,13 +1,21 @@
 import React, { Component } from 'react'
-import { ScrollView, View, StyleSheet, KeyboardAvoidingView, TextInput, Text, TouchableOpacity } from 'react-native'
+import { 
+  ScrollView, 
+  View, 
+  StyleSheet, 
+  KeyboardAvoidingView, 
+  TextInput, 
+  Text, 
+  Linking, 
+  TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
 import AwesomeAlert from 'react-native-awesome-alerts'
 import { SafeAreaView } from 'react-navigation'
-import DatePicker from 'react-native-datepicker'
-import RNPickerSelect from 'react-native-picker-select';
-// import AuthActions from '../Redux/AuthRedux'
+// import DatePicker from 'react-native-datepicker'
+// import RNPickerSelect from 'react-native-picker-select';
+import AuthActions from '../Redux/AuthRedux'
 // import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button, Appbar } from 'react-native-paper';
 // import { Images, Colors } from '../Themes'
@@ -34,65 +42,47 @@ class RegisterScreen extends Component {
 
     this.state = {
       role: 'student',
-      primary_f_name: '', 
-      primary_l_name: '', 
-      dob: '',
-      level_id: null,
-      address: '',
-      email: '',
-      phone: '',
-      secondary_f_name: '',
-      secondary_l_name: '',
+      // primary_f_name: '', 
+      // primary_l_name: '', 
+      // dob: '',
+      // level_id: null,
+      // address: '',
+      email: 'bluedreampro2017@gmail.com',
+      // phone: '',
+      // secondary_f_name: '',
+      // secondary_l_name: '',
       showAlert: false,
     }
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
+    // var today = new Date();
+    // var dd = String(today.getDate()).padStart(2, '0');
+    // var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    // var yyyy = today.getFullYear();
 
-    today = yyyy + '-' + mm + '-' + dd;
-    this.maxDate = today;
+    // today = yyyy + '-' + mm + '-' + dd;
+    // this.maxDate = today;
   }
 
+  componentDidMount(){
+    this.props.initStatesForAuthentication()
+  }
   componentWillUnmount() {
-    console.log("here will unmount")
-    // this.props.initStatesForAuthentication()
+    this.props.initStatesForAuthentication()
   }
 
   handleRegister = async () => {
     const { 
       role, 
-      primary_f_name, 
-      primary_l_name,
-      dob,
-      level_id,
-      address,
       email,
-      phone,
-      secondary_f_name,
-      secondary_l_name
     } = this.state
 
-    if (primary_f_name != '' && primary_l_name != '' && dob != '' && 
-      level_id !== null && address != '' && email != '' && phone != '') {
-      if( (role == 'student' && secondary_f_name != '' && secondary_l_name != '') || role == 'teacher') {
-        const credential = {
-          role, 
-          primary_f_name, 
-          primary_l_name,
-          dob,
-          level_id,
-          address,
-          email,
-          phone,
-          secondary_f_name,
-          secondary_l_name
-        }
-        this.props.navigation.navigate('PageVerify')
-      }else{
-        this.setState({ showAlert: true })
+    if (email != '') {
+      const credential = {
+        role, 
+        email,
+        device_type: 'ios',
+        push_token: "test_ios_push_token"
       }
-      // this.props.signInRequest(credential)
+      this.props.signInRequest(credential)
     } else {
       console.log(this.state)
       this.setState({ showAlert: true })
@@ -134,7 +124,23 @@ class RegisterScreen extends Component {
   }
 
   handleError = () => {
-    this.props.initStatesForAuthentication()
+    const {auth_error} = this.props
+    if(auth_error == "email not exist"){
+      this.props.initStatesForAuthentication()
+      // go to ucmas.no
+      const url = 'https://ucmas.no/search'
+      Linking.canOpenURL(url)
+      .then((supported) => {
+        if (!supported) {
+          console.log("Can't handle url: " + url);
+        } else {
+          return Linking.openURL(url);
+        }
+      })
+      .catch((err) => console.error('An error occurred', err));
+    }else{
+      this.props.initStatesForAuthentication()
+    }
   }
 
   handleTokenError = () => {
@@ -144,7 +150,7 @@ class RegisterScreen extends Component {
   showStudentArea = () => {
     return (
       <View style={{flex:1}}>
-        <View style={styles.row_area}>
+        {/* <View style={styles.row_area}>
           <Text style={styles.lbl_category}>Student</Text>
         </View>
         <View style={styles.row_area}>
@@ -263,7 +269,7 @@ class RegisterScreen extends Component {
             textContentType='telephoneNumber'
             style={styles.default_txt_input}
           />
-        </View>
+        </View>*/}
         <View style={styles.row_area}>
           <TextInput
             placeholder='Email'
@@ -275,14 +281,14 @@ class RegisterScreen extends Component {
             textContentType='emailAddress'
             style={styles.default_txt_input}
           />
-        </View>
+        </View> 
       </View>
     )
   }
   showTeacherArea = () => {
     return (
       <View style={{flex:1}}>
-        <View style={styles.row_area}>
+        {/* <View style={styles.row_area}>
           <Text style={styles.lbl_category}>Teacher</Text>
         </View>
         <View style={styles.row_area}>
@@ -374,7 +380,7 @@ class RegisterScreen extends Component {
             textContentType='telephoneNumber'
             style={styles.default_txt_input}
           />
-        </View>
+        </View> */}
         <View style={styles.row_area}>
           <TextInput
             placeholder='Email'
@@ -393,12 +399,14 @@ class RegisterScreen extends Component {
 
   render () {
     const {role} = this.state
-    // const {
-    //   fetching,
-    //   signin_error,
-    //   token_error
-    // } = this.props
-    // const token_error_message = token_error != null ? token_error.message : ''
+    const {
+      fetching,
+      auth_error,
+      token_error
+    } = this.props
+    const token_error_message = token_error != null ? token_error.message : ''
+    const is_auth_error = auth_error == "" ? false : true;
+    const auth_error_message = auth_error == "email not exist" ? "Email is not exist. Please signup in the website https://ucmas.no." : auth_error;
 
     return (
       <SafeAreaView style={styles.mainContainer}>
@@ -442,7 +450,7 @@ class RegisterScreen extends Component {
           confirmButtonColor="#009BF2"
           onConfirmPressed={this.handleCloseEmptyMessage}
         />
-        {/* <AwesomeAlert
+        <AwesomeAlert
           show={fetching}
           showProgress={true}
           progressSize={'large'}
@@ -450,10 +458,10 @@ class RegisterScreen extends Component {
           closeOnHardwareBackPress={false}
         />
         <AwesomeAlert
-          show={signin_error}
+          show={is_auth_error}
           showProgress={false}
           title="Error"
-          message="There was problem signing in! Try again."
+          message={auth_error_message}
           closeOnTouchOutside={true}
           closeOnHardwareBackPress={false}
           showCancelButton={true}
@@ -471,7 +479,7 @@ class RegisterScreen extends Component {
           confirmText="OK"
           confirmButtonColor="#DD6B55"
           onConfirmPressed={this.handleTokenError}
-        /> */}
+        />
       </SafeAreaView>
     )
   }
@@ -499,12 +507,19 @@ const pickerSelectStyles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
+  const { auth } = state
   return {
+    fetching: auth.auth_fetching,
+    auth_error: auth.auth_error,
+    token_error: auth.token_error
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    signInRequest: (credential) => dispatch(AuthActions.signInRequest(credential)),
+    initStatesForAuthentication: () => dispatch(AuthActions.initStatesForAuthentication()),
+    initTokenError: () => dispatch(AuthActions.initTokenError())
   }
 }
 

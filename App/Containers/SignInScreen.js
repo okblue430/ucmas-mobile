@@ -22,8 +22,6 @@ class SignInScreen extends Component {
 
   handleRegister = () => {
     console.log("go to register")
-    // this.props.navigation.navigate('App')
-    // this.props.navigation.navigate('PageVerify')
     this.props.navigation.navigate('PageRegister')
   }
 

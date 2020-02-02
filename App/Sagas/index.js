@@ -1,32 +1,42 @@
 import { takeLatest, all } from 'redux-saga/effects'
 import API from '../Services/Api'
-import FixtureAPI from '../Services/FixtureApi'
-import DebugConfig from '../Config/DebugConfig'
 
 /* ------------- Types ------------- */
 
-import { StartupTypes } from '../Redux/StartupRedux'
-import { GithubTypes } from '../Redux/GithubRedux'
+import { AuthTypes } from '../Redux/AuthRedux'
+import { LessonTypes } from '../Redux/LessonRedux'
 
 /* ------------- Sagas ------------- */
 
-import { startup } from './StartupSagas'
-import { getUserAvatar } from './GithubSagas'
+import {
+  signInRequest,
+  resendCodeRequest,
+  verifyCodeRequest,
+  checkToken,
+  signOut
+} from './AuthSagas'
+
+import { 
+  exerciseRequest
+} from './LessonSagas'
 
 /* ------------- API ------------- */
 
 // The API we use is only used from Sagas, so we create it here and pass along
 // to the sagas which need it.
-const api = DebugConfig.useFixtures ? FixtureAPI : API.create()
-
 /* ------------- Connect Types To Sagas ------------- */
+
+// custom
+const authApi = API.authenticate()
+const lessonApi = API.lessons()
 
 export default function * root () {
   yield all([
-    // some sagas only receive an action
-    takeLatest(StartupTypes.STARTUP, startup),
-
-    // some sagas receive extra parameters in addition to an action
-    takeLatest(GithubTypes.USER_REQUEST, getUserAvatar, api)
+    takeLatest(AuthTypes.SIGN_IN_REQUEST, signInRequest, authApi),
+    takeLatest(AuthTypes.RESEND_CODE_REQUEST, resendCodeRequest, authApi),
+    takeLatest(AuthTypes.VERIFY_CODE_REQUEST, verifyCodeRequest, authApi),
+    takeLatest(AuthTypes.CHECK_TOKEN, checkToken, authApi),
+    takeLatest(AuthTypes.SIGN_OUT, signOut),
+    takeLatest(LessonTypes.EXERCISE_REQUEST, exerciseRequest, lessonApi),
   ])
 }

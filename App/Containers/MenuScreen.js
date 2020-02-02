@@ -12,7 +12,7 @@ import styles from './Styles/MenuScreenStyle'
 class MenuScreen extends Component {
   handleHome = () => {
     this.props.navigation.toggleDrawer()
-    this.props.navigation.navigate('HomeScreen')
+    this.props.navigation.navigate('PageHome')
   }
 
   handleAccomplish = () => {
@@ -46,6 +46,9 @@ class MenuScreen extends Component {
     this.props.navigation.navigate('Auth')
   }
   render () {
+    const {
+      child,
+    } = this.props
     return (
       <SafeAreaView style={styles.mainContainer}>
         <View style={styles.whiteContainer}>
@@ -56,7 +59,7 @@ class MenuScreen extends Component {
                   <Avatar.Text size={36} label="ED" />
                 </View>
                 <View style={styles.username_area}>
-                  <Text style={{fontSize: 20}}>Edvard</Text>
+                  <Text style={{fontSize: 20}}>{child.first_name + " " + child.last_name}</Text>
                 </View>
               </View>
               <TouchableOpacity onPress={this.handleHome} uppercase={false} style={styles.menu_button}>
@@ -89,7 +92,9 @@ class MenuScreen extends Component {
 }
 
 const mapStateToProps = (state) => {
+  const { auth } = state
   return {
+    child: auth.child
   }
 }
 

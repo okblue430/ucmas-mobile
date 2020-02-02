@@ -7,7 +7,6 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 // Add Actions - replace 'Your' with whatever your reducer is called :)
-// import YourActions from '../Redux/YourRedux'
 import AuthActions from '../Redux/AuthRedux'
 import { Images, Colors } from '../Themes'
 
@@ -20,23 +19,24 @@ class AuthLoadingScreen extends Component {
   }
 
   componentDidMount () {
-    const {is_remember, user_temp_info} = this.props
-    console.log({is_remember})
-    if(is_remember){
-      const now = Math.floor(Date.now() / 1000)
-      if(now > user_temp_info.expired_auto_login) {
-        // expired auto login
-        this.props.navigation.navigate('SignInScreen')
-      }else{
-        const credential = {
-          email: user_temp_info.email,
-          password: user_temp_info.password
-        }
-        this.props.checkToken(credential)
+    const {
+      access_token,
+      push_token,
+      child
+    } = this.props
+    console.log({access_token})
+    console.log({push_token})
+    console.log(child)
+    if(access_token && push_token != "" && child.id !== undefined){
+      const credential = {
+        access_token,
+        push_token,
+        user_id : child.id
       }
+      this.props.checkToken(credential)
     }else{
       console.log("here")
-      this.props.navigation.navigate('SignInScreen')
+      this.props.navigation.navigate('Auth')
     }
   }
 
@@ -57,8 +57,9 @@ class AuthLoadingScreen extends Component {
 const mapStateToProps = (state) => {
   const { auth } = state
   return {
-    is_remember: auth.is_remember,
-    user_temp_info: auth.user_temp_info,
+    access_token: auth.access_token,
+    push_token: auth.push_token,
+    child: auth.child,
   }
 }
 
