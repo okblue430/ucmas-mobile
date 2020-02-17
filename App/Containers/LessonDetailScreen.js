@@ -16,9 +16,14 @@ class LessonDetailScreen extends Component {
     this.showPlan = this.showPlan.bind(this)
   }
 
-  showPlan(exercise_id){
+  showPlan(exercise_id) {
     console.log("clicked exercise :" + exercise_id)
+    const {
+      exercises,
+    } = this.props
+    const activeExercise = exercises.find( l => l.id == exercise_id)
     // this.props.exerciseRequest({exercise_id})
+    this.props.navigation.push('PagePlanDetail', {exercise_id, activeExercise})
   }
 
   renderLessonDetail = (item, index) => {
@@ -41,12 +46,12 @@ class LessonDetailScreen extends Component {
     } = this.props
     // get active lesson name
     const activeLesson = lessons.find( l => l.id == activeLessonID)
-    console.log("activeLesson")
-    console.log(activeLesson)
+    // console.log("activeLesson")
+    // console.log(activeLesson)
     return (
       <SafeAreaView style={styles.mainContainer} forceInset={{ bottom: 'never' }}>
         <View style={styles.whiteContainer}>
-          <MainHeader nav={this.props.navigation} title={activeLesson.lesson_name} screen="LessonsDetailScreen" />
+          <MainHeader nav={this.props.navigation} back={true} title={activeLesson.lesson_name} screen="LessonsDetailScreen" />
           <ScrollView style={[styles.container, styles.pageContainer]}>
             <View style={{marginTop: 20}}>
               { exercises.length > 0 ? exercises.map((item, index) => {

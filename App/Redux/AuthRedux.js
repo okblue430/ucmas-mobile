@@ -17,6 +17,9 @@ const { Types, Creators } = createActions({
   checkToken: ['payload'],
   checkTokenSuccess: ['payload'],
   checkTokenFailure: ['payload'],
+  profileUpdateRequest: ['credential'],
+  profileUpdateSuccess: ['payload'],
+  profileUpdateFailure: ['payload'],
   signOut: null,
   initTokenError: null,
 })
@@ -146,6 +149,21 @@ export const verifyCodeFailure = (state, action) => {
   const { message } = action.payload
   return state.merge({ auth_fetching: false, auth_error: message})
 }
+
+export const profileUpdateRequest = (state) => {
+  return state.merge({ auth_fetching: true, auth_error: ""})
+}
+export const profileUpdateSuccess = (state, action) => {
+  console.log('AuthRedux / profileUpdateSuccess', action)
+  const { child, children } = action.payload
+  return state.merge({ auth_fetching: false, auth_success: true, auth_error: "", children, child })
+}
+
+export const profileUpdateFailure = (state, action) => {
+  console.log('AuthRedux /updateFailure', action)
+  const { message } = action.payload
+  return state.merge({ auth_fetching: false, auth_error: message})
+}
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const reducer = createReducer(INITIAL_STATE, {
@@ -164,4 +182,7 @@ export const reducer = createReducer(INITIAL_STATE, {
   [Types.VERIFY_CODE_REQUEST]: verifyCodeRequest,
   [Types.VERIFY_CODE_SUCCESS]: verifyCodeSuccess,
   [Types.VERIFY_CODE_FAILURE]: verifyCodeFailure,
+  [Types.PROFILE_UPDATE_REQUEST]: profileUpdateRequest,
+  [Types.PROFILE_UPDATE_SUCCESS]: profileUpdateSuccess,
+  [Types.PROFILE_UPDATE_FAILURE]: profileUpdateFailure,
 })

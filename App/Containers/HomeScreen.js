@@ -27,9 +27,6 @@ class HomeScreen extends Component {
   }
   render () {
     const {
-      fetching,
-      auth_error,
-      auth_success,
       child,
       children
     } = this.props
@@ -40,19 +37,16 @@ class HomeScreen extends Component {
           <MainHeader nav={this.props.navigation} title="HOME" screen="HomeScreen" />
           <ScrollView style={[styles.container, styles.pageContainer]}>
             <View style={{marginTop: 20}}>
-              <Card.Title
-                title="Active User"
-                subtitle=""
-              />
               <Card style={{margin: 5}}>
                 <Card.Content>
+                  <Title>Active User</Title>
                   <Title>{child.first_name + "" + child.last_name}</Title>
                   <Paragraph>LEVEL : {child.level_name}</Paragraph>
                   <Paragraph>BIRTHDAY : {child.dob}</Paragraph>
                 </Card.Content>
               </Card>
             </View>
-            <View style={styles.mainContainer} >
+            <View>
               {children.map((item, index) => {
                 if(child.id != item.id){
                   return this.renderChild(item, index)

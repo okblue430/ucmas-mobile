@@ -24,14 +24,13 @@ class AuthLoadingScreen extends Component {
       push_token,
       child
     } = this.props
-    console.log({access_token})
-    console.log({push_token})
-    console.log(child)
-    if(access_token && push_token != "" && child.id !== undefined){
+    // console.log({access_token})
+    // console.log({push_token})
+    console.log({child})
+    if(access_token && push_token != ""){
       const credential = {
         access_token,
         push_token,
-        user_id : child.id
       }
       this.props.checkToken(credential)
     }else{

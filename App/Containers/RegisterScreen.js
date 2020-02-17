@@ -47,7 +47,7 @@ class RegisterScreen extends Component {
       // dob: '',
       // level_id: null,
       // address: '',
-      email: 'bluedreampro2017@gmail.com',
+      email: '',//bluedreampro2017@gmail.com
       // phone: '',
       // secondary_f_name: '',
       // secondary_l_name: '',

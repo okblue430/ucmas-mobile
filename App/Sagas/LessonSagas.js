@@ -36,38 +36,34 @@ export function * getLesson (api, action) {
 
 export function * exerciseRequest (api, {credential}) {
   try {    
-    console.log("exerciseRequest saga req")
-    console.log(credential)
+    // console.log("exerciseRequest saga req")
+    // console.log(credential)
     const access_token = yield select(AuthSelectors.getAccessToken)
     const push_token = yield select(AuthSelectors.getPushToken)
-    const device_type = yield select(AuthSelectors.getDeviceType)
     const headers = {access_token, push_token}
-    console.log("headers")
-    console.log(headers)
+    // console.log("headers")
+    // console.log(headers)
     const response = yield call(api._getExercises, headers, credential)
-    console.log("exerciseRequest saga res")
-    console.log(response)
+    // console.log("exerciseRequest saga res")
+    // console.log(response)
     if (response.ok) {
       var response_data = response.data
       if(response_data.success == "OK"){
         yield put(LessonActions.exerciseSuccess({exercises: response_data.exercises}))
         yield put(NavigationActions.navigate({ routeName: 'PageLessonDetail' }))
       }else{ // fail
-        console.log("here1")
+        // console.log("here1")
         yield put(AuthActions.exerciseFailure({message: response_data.message}))
         yield put(NavigationActions.navigate({ routeName: 'PageLessonDetail' }))
       }
 
     } else {
-      console.log("here2")
+      // console.log("here2")
       yield put(AuthActions.exerciseFailure({token_error: 'Token Invaild'}))
-      // yield put(NavigationActions.navigate({ routeName: 'PageRegister' }))
     }
   } catch (e) {
     console.log(e)
     yield put(AuthActions.exerciseFailure({token_error: 'Network error'}))
-    // yield put(AuthActions.checkTokenFailure({token_error: 'Network error'}))
-    // yield put(NavigationActions.navigate({ routeName: 'PageRegister' }))
   }
 
 }

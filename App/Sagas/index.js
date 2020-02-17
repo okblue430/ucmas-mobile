@@ -13,6 +13,7 @@ import {
   resendCodeRequest,
   verifyCodeRequest,
   checkToken,
+  updateProfileRequest,
   signOut
 } from './AuthSagas'
 
@@ -36,6 +37,7 @@ export default function * root () {
     takeLatest(AuthTypes.RESEND_CODE_REQUEST, resendCodeRequest, authApi),
     takeLatest(AuthTypes.VERIFY_CODE_REQUEST, verifyCodeRequest, authApi),
     takeLatest(AuthTypes.CHECK_TOKEN, checkToken, authApi),
+    takeLatest(AuthTypes.PROFILE_UPDATE_REQUEST, updateProfileRequest, authApi),
     takeLatest(AuthTypes.SIGN_OUT, signOut),
     takeLatest(LessonTypes.EXERCISE_REQUEST, exerciseRequest, lessonApi),
   ])

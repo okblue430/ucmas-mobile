@@ -20,13 +20,17 @@ export default class MainHeader extends Component {
   _handleMenu = () => {
     this.props.nav.toggleDrawer()
   }
+  _goBack = () => {
+    this.props.nav.pop()
+  }
   render () {
-    const {title} = this.props
+    const {title, back} = this.props
 
     return (
       <View style={{zIndex: 1000}}>
         <Appbar.Header>
-          <Appbar.Action icon="menu" onPress={this._handleMenu} />
+          {back && <Appbar.BackAction onPress={this._goBack} />}
+          {!back && <Appbar.Action icon="menu" onPress={this._handleMenu} />}
           <Appbar.Content title={title} />
         </Appbar.Header>
       </View>

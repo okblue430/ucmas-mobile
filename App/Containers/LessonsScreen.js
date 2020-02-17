@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 // import YourActions from '../Redux/YourRedux'
 import LessonActions from '../Redux/LessonRedux'
 import { SafeAreaView } from 'react-navigation'
+import AwesomeAlert from 'react-native-awesome-alerts'
 import MainHeader from '../Components/MainHeader'
 import { List, Button } from 'react-native-paper';
 
@@ -37,7 +38,8 @@ class LessonsScreen extends Component {
   }
   render () {
     const {
-      lessons
+      lessons,
+      fetching
     } = this.props
     return (
       <SafeAreaView style={styles.mainContainer} forceInset={{ bottom: 'never' }}>
@@ -51,6 +53,13 @@ class LessonsScreen extends Component {
             </View>
           </ScrollView>
         </View>
+        <AwesomeAlert
+          show={fetching}
+          showProgress={true}
+          progressSize={'large'}
+          closeOnTouchOutside={false}
+          closeOnHardwareBackPress={false}
+        />
       </SafeAreaView>
     )
   }
@@ -59,6 +68,7 @@ class LessonsScreen extends Component {
 const mapStateToProps = (state) => {
   const { lesson } = state
   return {
+    fetching: lesson.fetching,
     lessons: lesson.lessons,
   }
 }

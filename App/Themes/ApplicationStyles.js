@@ -9,7 +9,7 @@ const ApplicationStyles = {
   screen: {
     mainContainer: {
       flex: 1,
-      backgroundColor: Colors.transparent
+      backgroundColor: Colors.primary_color
     },
     flex_row: {
       display: 'flex',
@@ -21,6 +21,9 @@ const ApplicationStyles = {
     whiteContainer: {
       flex: 1,
       backgroundColor: '#fff'//Colors.transparent
+    },
+    active_area:{
+      margin: 20
     },
     backgroundImage: {
       position: 'absolute',

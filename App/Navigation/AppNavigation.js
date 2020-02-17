@@ -59,10 +59,25 @@ import { Metrics } from '../Themes'
 const LessonStack = createStackNavigator({
   PageLesson: { screen: LessonsScreen },
   PageLessonDetail: { screen: LessonDetailScreen },
-  PagePlanDetail: { screen: PlanDetailScreen }
+  PagePlanDetail: { screen: PlanDetailScreen },
 }, {
   headerMode: 'none',
   initialRouteName: 'PageLesson',
+  defaultNavigationOptions: {
+    headerStyle: styles.header
+  },
+  cardShadowEnabled: false,
+  transitionConfig : () => ({
+    containerStyle: {
+    }
+  })
+})
+const AssignmentStack = createStackNavigator({
+  PageAssignment: { screen: AssignmentScreen },
+  PagePlanDetail: { screen: PlanDetailScreen },
+}, {
+  headerMode: 'none',
+  initialRouteName: 'PageAssignment',
   defaultNavigationOptions: {
     headerStyle: styles.header
   },
@@ -76,8 +91,8 @@ const LessonStack = createStackNavigator({
 const DrawerStack = createDrawerNavigator({
   PageHome: { screen: HomeScreen },
   PageAccomplish: { screen: AccomplishScreen },
-  PageAssignment: { screen: AssignmentScreen },
-  PageLessons: { screen: LessonStack },
+  StackAssignment: { screen: AssignmentStack },
+  StackLessons: { screen: LessonStack },
   PageNotification: { screen: NotificationScreen },
   PageProfile: { screen: ProfileScreen },
   PageCalendar: { screen: CalendarScreen },

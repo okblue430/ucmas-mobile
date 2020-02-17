@@ -19,7 +19,12 @@ const authenticate = () => {
   const _checkToken = (params) => {
     _api.setHeader('Access-Token', params.access_token);
     _api.setHeader('Device-Id', params.push_token);
-    return _api.post('account/checkToken', {user_id: params.user_id})
+    return _api.post('account/checkToken', {})
+  }
+  const _updateProfile = (headers, params) => {
+    _api.setHeader('Access-Token', headers.access_token);
+    _api.setHeader('Device-Id', headers.push_token);
+    return _api.post('account/profile', params)
   }
   
 
@@ -27,7 +32,8 @@ const authenticate = () => {
     _signInByEmail,
     _resendCode,
     _verifyCode,
-    _checkToken
+    _checkToken,
+    _updateProfile
   }
 }
 

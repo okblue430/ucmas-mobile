@@ -23,12 +23,12 @@ class MenuScreen extends Component {
   handleAssignment = () => {
     // this.props.qrCodeScanInit()
     this.props.navigation.toggleDrawer()
-    this.props.navigation.navigate('PageAssignment')
+    this.props.navigation.navigate('StackAssignment')
   }
   handleLessons = () => {
     // this.props.qrCodeScanInit()
     this.props.navigation.toggleDrawer()
-    this.props.navigation.navigate('PageLessons')
+    this.props.navigation.navigate('StackLessons')
   }
   handleQuestions = () => {
     // this.props.qrCodeScanInit()
@@ -80,9 +80,9 @@ class MenuScreen extends Component {
               <TouchableOpacity onPress={this.handleProfile} uppercase={false} style={styles.menu_button}>
                 <View style={styles.menu_item_area}><Text style={styles.menu_item_txt}>Profile</Text></View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={this.handleLogout} uppercase={false} style={styles.menu_button}>
+              {/* <TouchableOpacity onPress={this.handleLogout} uppercase={false} style={styles.menu_button}>
                 <View style={styles.menu_item_area}><Text style={styles.menu_item_txt}>Logout</Text></View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </ScrollView>
         </View>

@@ -19,11 +19,11 @@ import { AuthSelectors } from '../Redux/AuthRedux'
 export function * signInRequest (api, { signin_credential }) {
 
   try {    
-    // console.log("auth saga req")
-    // console.log(signin_credential)
+    console.log("auth saga req")
+    console.log(signin_credential)
     const signin_response = yield call(api._signInByEmail, signin_credential)
-    // console.log("auth saga res")
-    // console.log(signin_response)
+    console.log("auth saga res")
+    console.log(signin_response)
     if (signin_response.ok) {
 
       var response_data = signin_response.data
@@ -83,19 +83,19 @@ export function * verifyCodeRequest (api, { credential }) {
     if (response.ok) {
       var response_data = response.data
       if(response_data.success == "OK"){
-        yield put(AuthActions.verifyCodeSuccess({child: response_data.child, children: response_data.children}))
-        yield put(LessonActions.lessonSuccess({lessons: response_data.lessons}))
+        yield put(AuthActions.verifyCodeSuccess({child: response_data.data.child, children: response_data.data.children}))
+        yield put(LessonActions.lessonSuccess({lessons: response_data.data.lessons, assignments: response_data.data.assignments}))
         yield put(NavigationActions.navigate({ routeName: 'PageRegisterSuccess' }))
       }else{ // fail
         yield put(AuthActions.verifyCodeFailure({message: response_data.message}))
       }
 
     } else {
-      yield put(AuthActions.verifyCodeFailure({message: "There was problem verify code in! Try again."}))
+      yield put(AuthActions.verifyCodeFailure({message: "There was a problem in the server! Try again."}))
     }
   } catch (e) {
     console.log(e)
-    yield put(AuthActions.verifyCodeFailure({message: "There was problem verify code in! Try again."}))
+    yield put(AuthActions.verifyCodeFailure({message: "There was a problem in the server! Try again."}))
   }
 }
 
@@ -104,13 +104,13 @@ export function * checkToken (api, param) {
     // console.log("auth check token saga req")
     // console.log(param.payload)
     const response = yield call(api._checkToken, param.payload)
-    // console.log("auth check token saga res")
-    // console.log(response)
+    console.log("auth check token saga res")
+    console.log(response)
     if (response.ok) {
       var response_data = response.data
       if(response_data.success == "OK"){
-        yield put(AuthActions.verifyCodeSuccess({child: response_data.child, children: response_data.children}))
-        yield put(LessonActions.lessonSuccess({lessons: response_data.lessons}))
+        yield put(AuthActions.verifyCodeSuccess({child: response_data.data.child, children: response_data.data.children}))
+        yield put(LessonActions.lessonSuccess({lessons: response_data.data.lessons, assignments: response_data.data.assignments}))
         yield put(NavigationActions.navigate({ routeName: 'App' }))
       }else{ // fail
         console.log("here1")
@@ -127,6 +127,36 @@ export function * checkToken (api, param) {
     console.log(e)
     yield put(AuthActions.checkTokenFailure({token_error: 'Network error'}))
     yield put(NavigationActions.navigate({ routeName: 'PageRegister' }))
+  }
+
+}
+
+export function * updateProfileRequest (api, {credential}) {
+  try {    
+    console.log("profileUpdateRequest saga req")
+    console.log(credential)
+    const access_token = yield select(AuthSelectors.getAccessToken)
+    const push_token = yield select(AuthSelectors.getPushToken)
+    const headers = {access_token, push_token}
+    const response = yield call(api._updateProfile, headers, credential)
+    console.log("profileUpdateRequest saga res")
+    console.log(response)
+    if (response.ok) {
+      var response_data = response.data
+      if(response_data.success == "OK"){
+        yield put(AuthActions.profileUpdateSuccess({child: response_data.data.child, children: response_data.data.children}))
+        yield put(LessonActions.lessonSuccess({lessons: response_data.data.lessons, assignments: response_data.data.assignments}))
+        // yield put(NavigationActions.back({}))
+      }else{ // fail
+        yield put(AuthActions.profileUpdateFailure({message: response_data.message}))
+      }
+
+    } else {
+      yield put(AuthActions.profileUpdateFailure({message: "There is a problem in server api! Try again."}))
+    }
+  } catch (e) {
+    console.log(e)
+    yield put(AuthActions.profileUpdateFailure({message: "There is a problem in server api! Try again."}))
   }
 
 }
